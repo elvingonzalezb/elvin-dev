@@ -8,38 +8,49 @@ class App extends Component {
 
     state = {
         temperatura: '',
+        temperaturaMinima: '',
+        temperaturaMaxima: '',
         desClima: '',
-        humedad: '',
-        velocidadViento: '',
+        humedad: '',       
         nomCiudadClima: '',
         abrPaisClima: '',
+        desIconoClima: '',
         desError: null
     }
 
     obtenerClima = async evento => {
         evento.preventDefault();
-        const { nomCiudad, nomPais } = evento.target.elements;
-        const nomCiudadActual        = nomCiudad.value;
-        const nomPaisActual          = nomPais.value;
-
-        if (nomCiudadActual && nomPaisActual) {
+        const { nomCiudad }    = evento.target.elements;
+        const nomCiudadActual  = nomCiudad.value;
+       
+        if (nomCiudadActual) {
             const desUrlApi = `http://api.openweathermap.org/data/2.5/weather?q=
-                               ${nomCiudadActual},${nomPaisActual}&appid=${DES_KEY_API}&units=metric`;
-            
-            const respuestaApi      = await fetch(desUrlApi);
-            const oInformacionClima = await respuestaApi.json();
+                               ${nomCiudadActual}&appid=${DES_KEY_API}&units=metric`;
+                                    
+            const respuestaApi     = await fetch(desUrlApi);
+            const oPronosticoClima = await respuestaApi.json();
 
-            this.setState({
-                temperatura: oInformacionClima.main.temp,
-                desClima: oInformacionClima.weather[0].description,
-                humedad: oInformacionClima.main.humidity,
-                velocidadViento: oInformacionClima.wind.speed,
-                nomCiudadClima: oInformacionClima.name,
-                abrPaisClima: oInformacionClima.sys.country,
-                desError: null
-            });
+                if (oPronosticoClima.cod == 404) {
+                    this.setState({ desError: '¡No existe la Ciudad ingresada!' })
+                } else {
+                    const desIcono = oPronosticoClima.weather[0].icon;
+                    const desUrlIcono = `http://openweathermap.org/img/w/${desIcono}.png`;
+
+                    this.setState({
+                        temperatura: oPronosticoClima.main.temp,
+                        desClima: oPronosticoClima.weather[0].description,
+                        humedad: oPronosticoClima.main.humidity,
+                        temperaturaMinima: oPronosticoClima.main.temp_min,
+                        temperaturaMaxima: oPronosticoClima.main.temp_max,
+                        nomCiudadClima: oPronosticoClima.name,
+                        abrPaisClima: oPronosticoClima.sys.country,
+                        desIconoClima: desUrlIcono,
+                        desError: null
+                    });
+                }           
+            
         } else {
-            this.setState({desError: 'Ingrese Ciudad a Consultar'})
+            this.setState({desError: '¡Ingrese Ciudad a Consultar!'})
         }        
     }
 
