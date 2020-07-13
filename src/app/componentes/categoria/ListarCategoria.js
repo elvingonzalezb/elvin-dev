@@ -12,7 +12,7 @@ const ListarCategoria = () => {
     }, [])
 
     const obtenerCategorias = async () => {
-        const categorias  = await categoriaServicio.listar()   
+        const categorias = await categoriaServicio.listar()   
         setCategorias(categorias.data)
         console.log(categorias.data);
     }
@@ -40,27 +40,31 @@ const ListarCategoria = () => {
 
         <div className="col-md-12 pt-2">
             <h4>Lista de Categoria</h4>    
-                <table className="table table-hover">
-                    <thead>
-                        <tr className="list-group-item">
-                            <td>Codigo</td>
-                            <td>Codigo</td>
-                            <td>Codigo</td>
-                            <td>Codigo</td>
-                        </tr>
-                    </thead>
-                    <tbody>        
-                        <tr className="list-group-item">
-                            <th>codigo</th>
-                            <td>categoria</td>
-                            <td>nombre</td>
-                            <td>categoria</td>
-                        </tr>                 
-                    </tbody>
-                </table> 
-                <button className="btn btn-sm btn-danger">
-                    Descargar
-                </button>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Titulo</th>
+                    <th scope="col">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {categorias &&
+                        categorias.map((categoria, numIndice) => (
+                            <tr key={categoria.id}>
+                                <th scope="row">{categoria.id}</th>
+                                <td>{categoria.name}</td>
+                                <td>{categoria.Title}</td>
+                                <td>{categoria.MetaTagDescription}</td>
+                            </tr> 
+                        ))
+                    }
+                </tbody>
+            </table>
+            <button className="btn btn-sm btn-danger">
+                Descargar
+            </button>
         </div>
     </div>
     )

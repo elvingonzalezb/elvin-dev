@@ -1,14 +1,14 @@
 import http from "../configuracionAxios";
 
 const listar = async () => {
-  return await http.get("/catalog_system/pub/category/tree/1");
+  return await http.get("/categoria");
 };
 
-const get = id => {
-  return http.get(`/catalog_system/pub/category/tree/${id}`);
+const getIdCategoria = id => {
+  return http.get(`/idcategoria/${id}`);
 };
 
 export default {
   listar,
-  get
+  getIdCategoria
 };
